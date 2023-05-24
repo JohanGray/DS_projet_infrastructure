@@ -241,10 +241,12 @@ resource "aws_instance" "projet-ec2" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 19.0"
+  version = "~> 19.5"
+
   cluster_name    = "projet-cluster"
   cluster_version = "1.24"
   cluster_endpoint_public_access = true
+
   cluster_addons = {
     coredns = {
       most_recent = true
@@ -256,17 +258,29 @@ module "eks" {
       most_recent = true
     }
   }
+
   vpc_id                   = aws_vpc.project-vpc.id
   subnet_ids               = ["${aws_subnet.projet-private-subnet-1.id}  ", "${aws_subnet.projet-private-subnet-2.id}", "${aws_subnet.projet-private-subnet-3.id}"]
-  #control_plane_subnet_ids = ["subnet-xyzde987", "subnet-slkjf456", "subnet-qeiru789"]
-  
+    
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
+    ami_type = "AL2_x86_64"
     instance_types = ["t2.micro"]
+
   }
+
   eks_managed_node_groups = {
-    blue = {}
+    blue = {
+      name = "projet-nodegroup-blue"
+      min_size     = 1
+      max_size     = 10
+      desired_size = 1
+      instance_types = ["t2.micro"]
+      capacity_type  = "SPOT"
+    }
+    
     green = {
+      name = "projet-nodegroup-green"
       min_size     = 1
       max_size     = 10
       desired_size = 1
