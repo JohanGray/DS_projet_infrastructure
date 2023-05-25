@@ -59,3 +59,20 @@ module "eks" {
     Environment = "projet-Eks"
   }
 }
+module "ec2_instance" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+
+  name = "Projet-ec2"
+
+  instance_type          = "t2.micro"
+  key_name               = "projet-keypair"
+  monitoring             = true
+  subnet_id              = element(module.vpc.public_subnets, 0)
+#  vpc_security_group_ids = [module.security_group.security_group_id]
+  associate_public_ip_address = true
+
+  tags = {
+    Terraform   = "true"
+    Environment = "Projet-DS"
+  }
+}
