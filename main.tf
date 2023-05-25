@@ -76,3 +76,11 @@ module "ec2_instance" {
     Environment = "Projet-DS"
   }
 }
+resource "aws_vpc_security_group_ingress_rule" "projet-vpc-ssh" {
+    security_group_id = module.vpc.default_security_group_id
+  
+    cidr_ipv4   = "0.0.0.0/0"
+    from_port   = 22
+    ip_protocol = "tcp"
+    to_port     = 22
+  }
