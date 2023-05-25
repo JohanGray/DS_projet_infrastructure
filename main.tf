@@ -1,7 +1,7 @@
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "3.14.3"
-  name = "main"
+  name = "projet-vpc"
   cidr = "10.0.0.0/16"
   azs                    = ["eu-west-3a", "eu-west-3b"]
   private_subnets        = ["10.0.0.0/19", "10.0.32.0/19"]
@@ -12,13 +12,13 @@ module "vpc" {
   enable_dns_hostnames   = true
   enable_dns_support     = true
   tags = {
-    Environment = "vpc-production"
+    Environment = "projet-DS"
   }
 }
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "19.15.0"
-  cluster_name    = "my-eks"
+  cluster_name    = "projet-eks"
   cluster_version = "1.24"
   cluster_endpoint_private_access = true
   cluster_endpoint_public_access  = true
@@ -51,11 +51,11 @@ module "eks" {
         value  = "spot"
         effect = "NO_SCHEDULE"
       }]
-      instance_types = ["t3.micro"]
+      instance_types = ["t2.micro"]
       capacity_type  = "SPOT"
     }
   }
   tags = {
-    Environment = "Eks-Production"
+    Environment = "projet-Eks"
   }
 }
